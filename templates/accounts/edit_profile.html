@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}تعديل الملف الشخصي - مطبخ الأرز{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-hero {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white; padding: 50px 0 40px; text-align: center;
+    }
+    .page-hero h1 { color: #f1c40f; font-weight: 900; }
+    .form-card {
+        border: none; border-radius: 20px;
+        box-shadow: 0 8px 35px rgba(0,0,0,0.10); padding: 40px;
+    }
+    .form-label { font-weight: 700; color: #2c3e50; }
+    .form-control {
+        border-radius: 10px; border: 2px solid #e9ecef; padding: 12px 15px; transition: all 0.3s;
+    }
+    .form-control:focus { border-color: #f1c40f; box-shadow: 0 0 0 0.2rem rgba(241,196,15,0.25); }
+    .save-btn {
+        background: linear-gradient(135deg, #f1c40f, #e67e22); border: none;
+        color: #2c3e50; font-weight: 800; font-size: 1.05rem;
+        padding: 12px 40px; border-radius: 12px; transition: all 0.3s;
+    }
+    .save-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(241,196,15,0.4); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+    <h1><i class="fas fa-edit me-2"></i> تعديل الملف الشخصي</h1>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="form-card">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <h5 class="fw-bold mb-4 text-muted">معلومات الحساب</h5>
+                    {% for field in user_form %}
+                    <div class="mb-3">
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}<div class="text-danger small mt-1">{{ field.errors }}</div>{% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <hr class="my-4">
+                    <h5 class="fw-bold mb-4 text-muted">معلومات إضافية</h5>
+                    {% for field in profile_form %}
+                    <div class="mb-3">
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}<div class="text-danger small mt-1">{{ field.errors }}</div>{% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-flex gap-3 mt-4">
+                        <button type="submit" class="save-btn flex-fill">
+                            <i class="fas fa-save me-2"></i> حفظ التغييرات
+                        </button>
+                        <a href="{% url 'accounts:profile' %}" class="btn btn-outline-secondary px-4 rounded-pill">إلغاء</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('input, textarea').forEach(el => {
+    if (!el.classList.contains('form-control')) el.classList.add('form-control');
+});
+</script>
+{% endblock %}

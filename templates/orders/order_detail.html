@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block title %}تفاصيل الطلب #{{ order.id }} - مطبخ الأرز{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-hero {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white; padding: 50px 0 40px; text-align: center;
+    }
+    .page-hero h1 { color: #f1c40f; font-weight: 900; }
+    .detail-card {
+        border: none; border-radius: 20px;
+        box-shadow: 0 8px 35px rgba(0,0,0,0.10); overflow: hidden;
+    }
+    .detail-header {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white; padding: 20px 30px;
+    }
+    .detail-body { padding: 30px; }
+    .info-section { margin-bottom: 25px; }
+    .info-label { font-weight: 700; color: #6c757d; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 5px; }
+    .info-value { font-size: 1.05rem; font-weight: 600; color: #2c3e50; }
+    .price-box {
+        background: linear-gradient(135deg, #f1c40f, #e67e22);
+        border-radius: 15px; padding: 20px; text-align: center; color: #2c3e50;
+    }
+    .price-box .amount { font-size: 2.5rem; font-weight: 900; }
+    .timeline { position: relative; padding-right: 30px; }
+    .timeline::before { content: ''; position: absolute; right: 10px; top: 0; bottom: 0; width: 2px; background: #e9ecef; }
+    .timeline-item { position: relative; margin-bottom: 20px; }
+    .timeline-dot {
+        position: absolute; right: -26px; top: 5px;
+        width: 16px; height: 16px; border-radius: 50%;
+        background: #dee2e6; border: 2px solid white;
+    }
+    .timeline-dot.active { background: #2ecc71; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="page-hero">
+    <h1><i class="fas fa-receipt me-2"></i> تفاصيل الطلب</h1>
+    <p class="opacity-75 mb-0">طلب رقم #{{ order.id }}</p>
+</div>
+
+<div class="container py-5">
+    <div class="row">
+        <!-- تفاصيل الطلب -->
+        <div class="col-lg-8 mb-4">
+            <div class="detail-card">
+                <div class="detail-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h4 class="mb-1 fw-bold">طلب #{{ order.id }}</h4>
+                        <small class="opacity-75">{{ order.order_date|date:"Y/m/d - H:i" }}</small>
+                    </div>
+                    <span class="status-badge
+                        {% if order.status == 'جديد' %}status-new
+                        {% elif order.status == 'قيد التجهيز' %}status-preparing
+                        {% elif order.status == 'جاهز' %}status-ready
+                        {% elif order.status == 'مكتمل' %}status-completed
+                        {% else %}status-cancelled{% endif %}">
+                        {{ order.status }}
+                    </span>
+                </div>
+                <div class="detail-body">
+                    <div class="row g-4">
+                        <div class="col-sm-6">
+                            <div class="info-section">
+                                <div class="info-label">🍚 نوع الأرز</div>
+                                <div class="info-value">{{ order.rice_type.name }}</div>
+                                <div class="text-muted small">{{ order.rice_price }} ريال/نفر</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="info-section">
+                                <div class="info-label">🍖 نوع الإدام</div>
+                                <div class="info-value">{{ order.protein.name }}</div>
+                                <div class="text-muted small">{{ order.protein_price }} ريال/نفر</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="info-section">
+                                <div class="info-label">👥 عدد النفار</div>
+                                <div class="info-value">{{ order.number_of_people }} نفار</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="info-section">
+                                <div class="info-label">🕐 الميعاد</div>
+                                <div class="info-value">
+                                    <span class="meal-badge {% if order.meal_time == 'غداء' %}meal-lunch{% else %}meal-dinner{% endif %}">
+                                        {{ order.meal_time }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="info-section">
+                                <div class="info-label">📞 رقم الجوال</div>
+                                <div class="info-value">{{ order.phone }}</div>
+                            </div>
+                        </div>
+                        {% if order.pickup_time %}
+                        <div class="col-sm-6">
+                            <div class="info-section">
+                                <div class="info-label">⏰ وقت الاستلام</div>
+                                <div class="info-value text-success fw-bold">{{ order.pickup_time|date:"H:i" }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if order.notes %}
+                        <div class="col-12">
+                            <div class="info-section">
+                                <div class="info-label">📝 ملاحظات</div>
+                                <div class="info-value">{{ order.notes }}</div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- جانب السعر والإجراءات -->
+        <div class="col-lg-4">
+            <div class="price-box mb-4">
+                <div class="mb-1" style="font-size:0.9rem; font-weight:700;">السعر الإجمالي</div>
+                <div class="amount">{{ order.total_price }}</div>
+                <div style="font-size:0.9rem;">ريال سعودي</div>
+            </div>
+
+            <div class="d-grid gap-2">
+                <a href="{% url 'orders:my_orders' %}" class="btn btn-outline-secondary rounded-pill">
+                    <i class="fas fa-arrow-right me-2"></i> العودة لطلباتي
+                </a>
+                {% if order.status == 'جديد' %}
+                <a href="{% url 'orders:cancel_order' order.id %}"
+                   onclick="return confirm('هل تريد إلغاء هذا الطلب؟')"
+                   class="btn btn-outline-danger rounded-pill">
+                    <i class="fas fa-times me-2"></i> إلغاء الطلب
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

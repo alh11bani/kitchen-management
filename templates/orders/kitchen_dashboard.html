@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block title %}لوحة المطبخ - مطبخ الأرز{% endblock %}
+
+{% block extra_css %}
+<style>
+    .kitchen-hero {
+        background: linear-gradient(135deg, #1a252f, #2c3e50);
+        color: white; padding: 40px 0 30px;
+    }
+    .kitchen-hero h1 { color: #f1c40f; font-weight: 900; }
+    .stat-card {
+        border: none; border-radius: 18px; padding: 25px;
+        color: white; text-align: center;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        transition: all 0.3s;
+    }
+    .stat-card:hover { transform: translateY(-5px); }
+    .stat-card .number { font-size: 2.5rem; font-weight: 900; }
+    .stat-card .label { font-size: 0.9rem; opacity: 0.85; }
+    .bg-new     { background: linear-gradient(135deg, #3498db, #2980b9); }
+    .bg-prep    { background: linear-gradient(135deg, #f39c12, #e67e22); }
+    .bg-ready   { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+    .bg-done    { background: linear-gradient(135deg, #95a5a6, #7f8c8d); }
+    .bg-cancel  { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+    .bg-today   { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+    .order-row:hover { background: #fffbea !important; cursor: pointer; }
+    .section-title {
+        border-right: 5px solid #f1c40f;
+        padding-right: 15px;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #2c3e50;
+    }
+    .status-select {
+        border-radius: 50px;
+        padding: 4px 12px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        border: 2px solid #f1c40f;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="kitchen-hero">
+    <div class="container">
+        <h1><i class="fas fa-tachometer-alt me-2"></i> لوحة تحكم المطبخ</h1>
+        <p class="opacity-75 mb-0">إدارة شاملة لجميع الطلبات</p>
+    </div>
+</div>
+
+<div class="container py-4">
+
+    <!-- إحصائيات -->
+    <div class="row g-3 mb-5">
+        <div class="col-6 col-md-2"><div class="stat-card bg-today"><div class="number">{{ today_orders }}</div><div class="label">طلبات اليوم</div></div></div>
+        <div class="col-6 col-md-2"><div class="stat-card bg-new"><div class="number">{{ new_orders }}</div><div class="label">جديدة</div></div></div>
+        <div class="col-6 col-md-2"><div class="stat-card bg-prep"><div class="number">{{ preparing_orders }}</div><div class="label">قيد التجهيز</div></div></div>
+        <div class="col-6 col-md-2"><div class="stat-card bg-ready"><div class="number">{{ ready_orders }}</div><div class="label">جاهزة</div></div></div>
+        <div class="col-6 col-md-2"><div class="stat-card bg-done"><div class="number">{{ completed_orders }}</div><div class="label">مكتملة</div></div></div>
+        <div class="col-6 col-md-2"><div class="stat-card bg-cancel"><div class="number">{{ cancelled_orders }}</div><div class="label">ملغاة</div></div></div>
+    </div>
+
+    <!-- الطلبات النشطة -->
+    <h2 class="section-title mb-4">الطلبات النشطة 🔥</h2>
+
+    {% if active_orders %}
+    <div class="table-responsive mb-5">
+        <table class="table table-hover align-middle rounded-3 overflow-hidden shadow-sm">
+            <thead style="background:#2c3e50; color:white;">
+                <tr>
+                    <th>#</th>
+                    <th>الزبون</th>
+                    <th>الوجبة</th>
+                    <th>النفار</th>
+                    <th>الميعاد</th>
+                    <th>الإجمالي</th>
+                    <th>الحالة</th>
+                    <th>تغيير الحالة</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in active_orders %}
+                <tr class="order-row" id="order-row-{{ order.id }}">
+                    <td class="fw-bold text-muted">#{{ order.id }}</td>
+                    <td><i class="fas fa-user text-warning me-1"></i> {{ order.customer.username }}</td>
+                    <td>{{ order.rice_type.name }} + {{ order.protein.name }}</td>
+                    <td>{{ order.number_of_people }} نفار</td>
+                    <td>
+                        <span class="meal-badge {% if order.meal_time == 'غداء' %}meal-lunch{% else %}meal-dinner{% endif %}">
+                            {{ order.meal_time }}
+                        </span>
+                    </td>
+                    <td class="fw-bold text-warning">{{ order.get_total_price_display }}</td>
+                    <td>
+                        <span class="status-badge
+                            {% if order.status == 'جديد' %}status-new
+                            {% elif order.status == 'قيد التجهيز' %}status-preparing
+                            {% elif order.status == 'جاهز' %}status-ready
+                            {% else %}status-completed{% endif %}"
+                            id="status-text-{{ order.id }}">
+                            {{ order.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <select class="status-select" onchange="updateStatus({{ order.id }}, this.value)">
+                            <option value="">-- تغيير --</option>
+                            <option value="جديد">جديد</option>
+                            <option value="قيد التجهيز">قيد التجهيز</option>
+                            <option value="جاهز">جاهز</option>
+                            <option value="مكتمل">مكتمل</option>
+                            <option value="ملغي">ملغي</option>
+                        </select>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="alert alert-success rounded-3 text-center mb-5">
+            <i class="fas fa-check-circle me-2"></i> لا توجد طلبات نشطة حالياً
+        </div>
+    {% endif %}
+
+    <!-- رابط جميع الطلبات -->
+    <div class="text-center">
+        <a href="{% url 'orders:all_orders' %}" class="btn btn-dark fw-bold px-5 rounded-pill">
+            <i class="fas fa-list me-2"></i> عرض جميع الطلبات
+        </a>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function getCsrfToken() {
+    return document.cookie.split(';')
+        .find(c => c.trim().startsWith('csrftoken='))
+        ?.split('=')[1] || '';
+}
+
+function updateStatus(orderId, newStatus) {
+    if (!newStatus) return;
+    fetch(`/kitchen/order/${orderId}/status/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCsrfToken(),
+        },
+        body: `status=${encodeURIComponent(newStatus)}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            const badge = document.getElementById(`status-text-${orderId}`);
+            if (badge) {
+                badge.textContent = newStatus;
+                badge.className = 'status-badge';
+                if (newStatus === 'جديد') badge.classList.add('status-new');
+                else if (newStatus === 'قيد التجهيز') badge.classList.add('status-preparing');
+                else if (newStatus === 'جاهز') badge.classList.add('status-ready');
+                else if (newStatus === 'مكتمل') badge.classList.add('status-completed');
+                else badge.classList.add('status-cancelled');
+            }
+            if (['مكتمل','ملغي'].includes(newStatus)) {
+                setTimeout(() => {
+                    const row = document.getElementById(`order-row-${orderId}`);
+                    if (row) row.style.opacity = '0.4';
+                }, 500);
+            }
+        }
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+
+{% block title %}طلب جديد - مطبخ الأرز{% endblock %}
+
+{% block extra_css %}
+<style>
+    .order-hero {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        padding: 50px 0 40px;
+        text-align: center;
+    }
+    .order-hero h1 { color: #f1c40f; font-weight: 900; }
+    .form-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 8px 35px rgba(0,0,0,0.10);
+        padding: 40px;
+    }
+    .form-label { font-weight: 700; color: #2c3e50; }
+    .form-control, .form-select {
+        border-radius: 10px;
+        border: 2px solid #e9ecef;
+        padding: 12px 15px;
+        transition: all 0.3s;
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: #f1c40f;
+        box-shadow: 0 0 0 0.2rem rgba(241,196,15,0.25);
+    }
+    .submit-btn {
+        background: linear-gradient(135deg, #f1c40f, #e67e22);
+        border: none;
+        color: #2c3e50;
+        font-weight: 800;
+        font-size: 1.1rem;
+        padding: 14px;
+        border-radius: 12px;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(241,196,15,0.4);
+    }
+    .price-summary {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 15px;
+        padding: 25px;
+        border-right: 5px solid #f1c40f;
+    }
+    .total-price {
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: #f1c40f;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="order-hero">
+    <h1><i class="fas fa-plus-circle me-2"></i> طلب جديد</h1>
+    <p class="opacity-75 mb-0">اختر وجبتك وقدّم طلبك بكل سهولة</p>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="form-card">
+                <form method="post" id="order-form">
+                    {% csrf_token %}
+
+                    <div class="row g-4">
+                        <!-- نوع الأرز -->
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="fas fa-seedling text-warning me-1"></i> نوع الأرز</label>
+                            {{ form.rice_type }}
+                            {% if form.rice_type.errors %}
+                                <div class="text-danger small mt-1">{{ form.rice_type.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- نوع الإدام -->
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="fas fa-drumstick-bite text-warning me-1"></i> نوع الإدام</label>
+                            {{ form.protein }}
+                            {% if form.protein.errors %}
+                                <div class="text-danger small mt-1">{{ form.protein.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- عدد النفار -->
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="fas fa-users text-warning me-1"></i> عدد النفار</label>
+                            {{ form.number_of_people }}
+                            {% if form.number_of_people.errors %}
+                                <div class="text-danger small mt-1">{{ form.number_of_people.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- الميعاد -->
+                        <div class="col-md-6">
+                            <label class="form-label"><i class="fas fa-clock text-warning me-1"></i> الميعاد</label>
+                            {{ form.meal_time }}
+                            {% if form.meal_time.errors %}
+                                <div class="text-danger small mt-1">{{ form.meal_time.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- رقم الجوال -->
+                        <div class="col-12">
+                            <label class="form-label"><i class="fas fa-phone text-warning me-1"></i> رقم الجوال</label>
+                            {{ form.phone }}
+                            {% if form.phone.errors %}
+                                <div class="text-danger small mt-1">{{ form.phone.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- ملاحظات -->
+                        <div class="col-12">
+                            <label class="form-label"><i class="fas fa-sticky-note text-warning me-1"></i> ملاحظات (اختياري)</label>
+                            {{ form.notes }}
+                        </div>
+
+                        <!-- ملخص السعر -->
+                        <div class="col-12">
+                            <div class="price-summary">
+                                <h5 class="fw-bold mb-3"><i class="fas fa-calculator me-2"></i> ملخص السعر التقديري</h5>
+                                <p class="text-muted small mb-2">السعر الفعلي يحسب عند تقديم الطلب</p>
+                                <div class="d-flex align-items-center">
+                                    <span class="text-muted me-2">السعر الإجمالي:</span>
+                                    <span class="total-price" id="total-price">-- ريال</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- زر التقديم -->
+                        <div class="col-12">
+                            <button type="submit" class="submit-btn">
+                                <i class="fas fa-paper-plane me-2"></i> تقديم الطلب
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// بيانات الأسعار
+const ricePrices = {
+    {% for rice in rice_types %}
+    "{{ rice.id }}": {{ rice.price }},
+    {% endfor %}
+};
+const proteinPrices = {
+    {% for protein in proteins %}
+    "{{ protein.id }}": {{ protein.price }},
+    {% endfor %}
+};
+
+function updatePrice() {
+    const riceId = document.getElementById('id_rice_type')?.value;
+    const proteinId = document.getElementById('id_protein')?.value;
+    const people = parseInt(document.getElementById('id_number_of_people')?.value) || 0;
+
+    const ricePrice = parseFloat(ricePrices[riceId]) || 0;
+    const proteinPrice = parseFloat(proteinPrices[proteinId]) || 0;
+    const total = (ricePrice + proteinPrice) * people;
+
+    const el = document.getElementById('total-price');
+    if (total > 0) {
+        el.textContent = total.toFixed(2) + ' ريال';
+    } else {
+        el.textContent = '-- ريال';
+    }
+}
+
+document.getElementById('id_rice_type')?.addEventListener('change', updatePrice);
+document.getElementById('id_protein')?.addEventListener('change', updatePrice);
+document.getElementById('id_number_of_people')?.addEventListener('input', updatePrice);
+
+// Add Bootstrap classes to form fields
+document.querySelectorAll('select').forEach(el => el.classList.add('form-select'));
+document.querySelectorAll('input[type=text], input[type=number], textarea').forEach(el => el.classList.add('form-control'));
+document.querySelector('textarea')?.setAttribute('rows', 3);
+</script>
+{% endblock %}

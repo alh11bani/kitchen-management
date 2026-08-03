@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}إنشاء حساب جديد{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 col-lg-7">
+            <div class="card">
+                <div class="card-header bg-success text-white text-center">
+                    <h4><i class="fas fa-user-plus"></i> إنشاء حساب جديد</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-success w-100">إنشاء الحساب</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <p>لديك حساب؟ <a href="{% url 'accounts:login' %}">تسجيل الدخول</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

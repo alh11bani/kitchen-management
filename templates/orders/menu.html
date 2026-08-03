@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}قائمة الطعام - مطبخ الأرز{% endblock %}
+
+{% block extra_css %}
+<style>
+    .menu-hero {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        padding: 50px 0 40px;
+        text-align: center;
+    }
+    .menu-hero h1 { color: #f1c40f; font-weight: 900; }
+    .menu-card {
+        border: none;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.10);
+        transition: all 0.3s ease;
+    }
+    .menu-card:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.18);
+    }
+    .menu-card .card-img-top {
+        height: 180px;
+        object-fit: cover;
+        background: linear-gradient(135deg, #f1c40f22, #e67e2222);
+    }
+    .img-placeholder {
+        height: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    }
+    .price-badge {
+        background: linear-gradient(135deg, #f1c40f, #e67e22);
+        color: #2c3e50;
+        font-weight: 800;
+        padding: 6px 18px;
+        border-radius: 50px;
+        font-size: 1rem;
+    }
+    .section-header {
+        border-right: 5px solid #f1c40f;
+        padding-right: 15px;
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #2c3e50;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="menu-hero">
+    <h1><i class="fas fa-list-alt me-2"></i> قائمة الطعام</h1>
+    <p class="opacity-75 mb-0">اختر ما يناسبك من أنواع الأرز والإدام</p>
+</div>
+
+<div class="container py-5">
+
+    <!-- أنواع الأرز -->
+    <div class="mb-5">
+        <h2 class="section-header mb-4">🍚 أنواع الأرز</h2>
+        {% if rice_types %}
+        <div class="row g-4">
+            {% for rice in rice_types %}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="menu-card card h-100">
+                    <div class="img-placeholder">🍚</div>
+                    <div class="card-body text-center">
+                        <h5 class="fw-bold mb-2">{{ rice.name }}</h5>
+                        {% if rice.description %}
+                            <p class="text-muted small mb-3">{{ rice.description }}</p>
+                        {% endif %}
+                        <span class="price-badge">{{ rice.price }} ريال / نفر</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+            <div class="alert alert-warning rounded-3 text-center">لا توجد أنواع أرز متاحة حالياً</div>
+        {% endif %}
+    </div>
+
+    <!-- أنواع الإدام -->
+    <div class="mb-5">
+        <h2 class="section-header mb-4">🍖 أنواع الإدام</h2>
+        {% if proteins %}
+        <div class="row g-4">
+            {% for protein in proteins %}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="menu-card card h-100">
+                    <div class="img-placeholder">🍖</div>
+                    <div class="card-body text-center">
+                        <h5 class="fw-bold mb-2">{{ protein.name }}</h5>
+                        {% if protein.description %}
+                            <p class="text-muted small mb-3">{{ protein.description }}</p>
+                        {% endif %}
+                        <span class="price-badge">{{ protein.price }} ريال / نفر</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+            <div class="alert alert-warning rounded-3 text-center">لا توجد إدامات متاحة حالياً</div>
+        {% endif %}
+    </div>
+
+    <!-- زر الطلب -->
+    <div class="text-center mt-4">
+        {% if user.is_authenticated %}
+            <a href="{% url 'orders:create_order' %}" class="btn btn-warning btn-lg fw-bold px-5 rounded-pill shadow">
+                <i class="fas fa-plus-circle me-2"></i> اطلب الآن
+            </a>
+        {% else %}
+            <a href="{% url 'accounts:login' %}" class="btn btn-warning btn-lg fw-bold px-5 rounded-pill shadow">
+                <i class="fas fa-sign-in-alt me-2"></i> سجّل دخولك للطلب
+            </a>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

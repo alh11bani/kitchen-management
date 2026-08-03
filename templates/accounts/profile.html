@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}الملف الشخصي - مطبخ الأرز{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-hero {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white; padding: 60px 0; text-align: center;
+    }
+    .avatar {
+        width: 100px; height: 100px; border-radius: 50%;
+        background: linear-gradient(135deg, #f1c40f, #e67e22);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2.5rem; color: #2c3e50; font-weight: 900;
+        margin: 0 auto 15px;
+    }
+    .profile-card {
+        border: none; border-radius: 20px;
+        box-shadow: 0 8px 35px rgba(0,0,0,0.10); padding: 35px;
+    }
+    .info-item { padding: 15px 0; border-bottom: 1px solid #f0f0f0; }
+    .info-item:last-child { border-bottom: none; }
+    .info-label { font-weight: 700; color: #6c757d; font-size: 0.85rem; }
+    .info-value { font-size: 1.05rem; color: #2c3e50; font-weight: 600; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-hero">
+    <div class="avatar">{{ user.username|first|upper }}</div>
+    <h2 class="fw-bold" style="color:#f1c40f;">{{ user.username }}</h2>
+    <p class="opacity-75">{{ user.email }}</p>
+</div>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="profile-card">
+                <h4 class="fw-bold mb-4"><i class="fas fa-user me-2 text-warning"></i> معلوماتي</h4>
+
+                <div class="info-item">
+                    <div class="info-label">اسم المستخدم</div>
+                    <div class="info-value">{{ user.username }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">البريد الإلكتروني</div>
+                    <div class="info-value">{{ user.email|default:"غير محدد" }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">الاسم الكامل</div>
+                    <div class="info-value">{{ user.get_full_name|default:"غير محدد" }}</div>
+                </div>
+                {% if user.profile.phone %}
+                <div class="info-item">
+                    <div class="info-label">رقم الجوال</div>
+                    <div class="info-value">{{ user.profile.phone }}</div>
+                </div>
+                {% endif %}
+                <div class="info-item">
+                    <div class="info-label">تاريخ الانضمام</div>
+                    <div class="info-value">{{ user.date_joined|date:"Y/m/d" }}</div>
+                </div>
+
+                <div class="mt-4 d-flex gap-3">
+                    <a href="{% url 'accounts:edit_profile' %}" class="btn btn-warning fw-bold px-4 rounded-pill flex-fill">
+                        <i class="fas fa-edit me-2"></i> تعديل الملف
+                    </a>
+                    <a href="{% url 'orders:my_orders' %}" class="btn btn-outline-secondary px-4 rounded-pill flex-fill">
+                        <i class="fas fa-clipboard-list me-2"></i> طلباتي
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}جميع الطلبات - مطبخ الأرز{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-hero {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white; padding: 50px 0 40px; text-align: center;
+    }
+    .page-hero h1 { color: #f1c40f; font-weight: 900; }
+    .filter-card { border: none; border-radius: 15px; box-shadow: 0 4px 18px rgba(0,0,0,0.07); padding: 20px; margin-bottom: 30px; }
+    .order-row:hover { background: #fffbea !important; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+    <h1><i class="fas fa-list me-2"></i> جميع الطلبات</h1>
+</div>
+
+<div class="container py-5">
+    <!-- فلاتر البحث -->
+    <div class="filter-card">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label fw-bold">فلترة بالحالة</label>
+                <select name="status" class="form-select">
+                    <option value="">-- جميع الحالات --</option>
+                    {% for val, label in status_choices %}
+                        <option value="{{ val }}" {% if current_status == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold">فلترة بالميعاد</label>
+                <select name="meal_time" class="form-select">
+                    <option value="">-- جميع الأوقات --</option>
+                    {% for val, label in meal_time_choices %}
+                        <option value="{{ val }}" {% if current_meal_time == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 d-flex gap-2">
+                <button type="submit" class="btn btn-warning fw-bold flex-fill rounded-pill">
+                    <i class="fas fa-filter me-1"></i> تطبيق
+                </button>
+                <a href="{% url 'orders:all_orders' %}" class="btn btn-outline-secondary rounded-pill">مسح</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- جدول الطلبات -->
+    {% if orders %}
+    <div class="table-responsive">
+        <table class="table table-hover align-middle shadow-sm rounded-3 overflow-hidden">
+            <thead style="background:#2c3e50; color:white;">
+                <tr>
+                    <th>#</th>
+                    <th>الزبون</th>
+                    <th>الوجبة</th>
+                    <th>النفار</th>
+                    <th>الميعاد</th>
+                    <th>الإجمالي</th>
+                    <th>الحالة</th>
+                    <th>التاريخ</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr class="order-row">
+                    <td class="fw-bold text-muted">#{{ order.id }}</td>
+                    <td>{{ order.customer.username }}</td>
+                    <td>{{ order.rice_type.name }} + {{ order.protein.name }}</td>
+                    <td>{{ order.number_of_people }}</td>
+                    <td>
+                        <span class="meal-badge {% if order.meal_time == 'غداء' %}meal-lunch{% else %}meal-dinner{% endif %}">
+                            {{ order.meal_time }}
+                        </span>
+                    </td>
+                    <td class="fw-bold text-warning">{{ order.get_total_price_display }}</td>
+                    <td>
+                        <span class="status-badge
+                            {% if order.status == 'جديد' %}status-new
+                            {% elif order.status == 'قيد التجهيز' %}status-preparing
+                            {% elif order.status == 'جاهز' %}status-ready
+                            {% elif order.status == 'مكتمل' %}status-completed
+                            {% else %}status-cancelled{% endif %}">
+                            {{ order.status }}
+                        </span>
+                    </td>
+                    <td class="text-muted small">{{ order.order_date|date:"Y/m/d" }}</td>
+                    <td>
+                        <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-sm btn-outline-secondary rounded-pill">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="alert alert-info text-center rounded-3">لا توجد طلبات مطابقة للفلتر المختار</div>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="{% url 'orders:kitchen_dashboard' %}" class="btn btn-dark fw-bold px-5 rounded-pill">
+            <i class="fas fa-arrow-right me-2"></i> العودة للوحة المطبخ
+        </a>
+    </div>
+</div>
+{% endblock %}

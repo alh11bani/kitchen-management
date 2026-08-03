@@ -1,0 +1,111 @@
+/* =============================================
+   base.css – الأنماط العامة لجميع الصفحات
+   ============================================= */
+
+body {
+    font-family: 'Cairo', sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* ── Navbar ── */
+.navbar {
+    background-color: #2c3e50 !important;
+}
+.navbar-brand {
+    font-weight: 700;
+    color: #f1c40f !important;
+}
+.navbar-nav .nav-link {
+    color: #ecf0f1 !important;
+}
+.navbar-nav .nav-link:hover {
+    color: #f1c40f !important;
+}
+
+/* ── Footer ── */
+.footer {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 20px 0;
+    margin-top: 50px;
+}
+
+/* ── Cards ── */
+.card {
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ── Buttons ── */
+.btn-primary {
+    background-color: #f1c40f;
+    border-color: #f1c40f;
+    color: #2c3e50;
+}
+.btn-primary:hover {
+    background-color: #d4ac0d;
+    border-color: #d4ac0d;
+    color: #2c3e50;
+}
+
+/* ── Status Badges ── */
+.status-badge {
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: 700;
+}
+.status-new        { background-color: #3498db; color: white; }
+.status-preparing  { background-color: #f39c12; color: white; }
+.status-ready      { background-color: #2ecc71; color: white; }
+.status-completed  { background-color: #95a5a6; color: white; }
+.status-cancelled  { background-color: #e74c3c; color: white; }
+
+/* ── Meal Badges ── */
+.meal-badge {
+    padding: 3px 12px;
+    border-radius: 15px;
+    font-weight: 700;
+    font-size: 12px;
+}
+.meal-lunch  { background-color: #2ecc71; color: white; }
+.meal-dinner { background-color: #34495e; color: white; }
+
+/* ── Section Title ── */
+.section-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #2c3e50;
+    position: relative;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+.section-title::after {
+    content: '';
+    display: block;
+    width: 60%;
+    height: 4px;
+    background: linear-gradient(135deg, #f1c40f, #e67e22);
+    border-radius: 4px;
+    margin: 8px auto 0;
+}
+
+/* ── Section Header (border style) ── */
+.section-header {
+    border-right: 5px solid #f1c40f;
+    padding-right: 15px;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #2c3e50;
+}
+
+/* ── Page Hero (shared) ── */
+.page-hero {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: white;
+    padding: 50px 0 40px;
+    text-align: center;
+}
+.page-hero h1 {
+    color: #f1c40f;
+    font-weight: 900;
+}

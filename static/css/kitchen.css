@@ -1,0 +1,64 @@
+/* =============================================
+   kitchen.css – أنماط لوحة تحكم المطبخ
+   ============================================= */
+
+/* ── Kitchen Hero ── */
+.kitchen-hero {
+    background: linear-gradient(135deg, #1a252f, #2c3e50);
+    color: white;
+    padding: 40px 0 30px;
+}
+.kitchen-hero h1 {
+    color: #f1c40f;
+    font-weight: 900;
+}
+
+/* ── Stat Cards ── */
+.stat-card {
+    border: none;
+    border-radius: 18px;
+    padding: 25px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+.stat-card .number {
+    font-size: 2.5rem;
+    font-weight: 900;
+}
+.stat-card .label {
+    font-size: 0.9rem;
+    opacity: 0.85;
+}
+
+/* ── Stat Color Variants ── */
+.bg-new    { background: linear-gradient(135deg, #3498db, #2980b9); }
+.bg-prep   { background: linear-gradient(135deg, #f39c12, #e67e22); }
+.bg-ready  { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+.bg-done   { background: linear-gradient(135deg, #95a5a6, #7f8c8d); }
+.bg-cancel { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+.bg-today  { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+
+/* ── Status Select Dropdown ── */
+.status-select {
+    border-radius: 50px;
+    padding: 4px 12px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border: 2px solid #f1c40f;
+    cursor: pointer;
+}
+.status-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(241, 196, 15, 0.3);
+}
+
+/* ── Table Row Hover ── */
+.order-row:hover {
+    background: #fffbea !important;
+    cursor: pointer;
+}

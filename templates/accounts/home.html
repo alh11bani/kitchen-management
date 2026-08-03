@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}الرئيسية - مطبخ الأرز{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4">🍚 مرحباً بكم في مطبخ الأرز</h1>
+            <p class="lead">نقدم لكم أشهى أنواع الأرز مع الإدامات المتنوعة</p>
+            <a href="{% url 'orders:menu' %}" class="btn btn-primary btn-lg mt-3">
+                <i class="fas fa-list"></i> استعرض القائمة
+            </a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'orders:create_order' %}" class="btn btn-success btn-lg mt-3">
+                    <i class="fas fa-plus-circle"></i> قدم طلباً الآن
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if user.is_staff and recent_orders %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3><i class="fas fa-clipboard-list"></i> آخر الطلبات</h3>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>الزبون</th>
+                            <th>الأرز</th>
+                            <th>الإدام</th>
+                            <th>النفار</th>
+                            <th>السعر</th>
+                            <th>الحالة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in recent_orders %}
+                        <tr>
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.customer.username }}</td>
+                            <td>{{ order.rice_type.name }}</td>
+                            <td>{{ order.protein.name }}</td>
+                            <td>{{ order.number_of_people }}</td>
+                            <td>{{ order.total_price }} ريال</td>
+                            <td>
+                                <span class="badge status-{{ order.status|slugify }}">
+                                    {{ order.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
