@@ -22,7 +22,7 @@ admin.site.register(User, CustomUserAdmin)
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'phone', 'is_kitchen_owner', 'created_at')
-    list_filter = ('is_kitchen_owner', 'created_at')
+    list_display = ('user', 'phone', 'created_at')
+    list_filter = ('created_at',)
     search_fields = ('user__username', 'phone', 'address')
     readonly_fields = ('created_at', 'updated_at')

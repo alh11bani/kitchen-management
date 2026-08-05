@@ -102,14 +102,16 @@
                                 <div class="info-value">{{ order.phone }}</div>
                             </div>
                         </div>
-                        {% if order.pickup_time %}
-                        <div class="col-sm-6">
-                            <div class="info-section">
-                                <div class="info-label">⏰ وقت الاستلام</div>
-                                <div class="info-value text-success fw-bold">{{ order.pickup_time|date:"H:i" }}</div>
-                            </div>
-                        </div>
-                        {% endif %}
+                    {% if order.pickup_time %}
+<div class="col-sm-6">
+    <div class="info-section">
+        <div class="info-label">📅 تاريخ الاستلام</div>
+        <div class="info-value text-success fw-bold">
+            {{ order.pickup_time|date:"l، j F Y" }}
+        </div>
+    </div>
+</div>
+{% endif %}
                         {% if order.notes %}
                         <div class="col-12">
                             <div class="info-section">
@@ -128,7 +130,7 @@
             <div class="price-box mb-4">
                 <div class="mb-1" style="font-size:0.9rem; font-weight:700;">السعر الإجمالي</div>
                 <div class="amount">{{ order.total_price }}</div>
-                <div style="font-size:0.9rem;">ريال سعودي</div>
+                <div style="font-size:0.9rem;">ريال يمني</div>
             </div>
 
             <div class="d-grid gap-2">

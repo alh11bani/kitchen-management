@@ -55,7 +55,7 @@
 
     <!-- إحصائيات -->
     <div class="row g-3 mb-5">
-        <div class="col-6 col-md-2"><div class="stat-card bg-today"><div class="number">{{ today_orders }}</div><div class="label">طلبات اليوم</div></div></div>
+        <div class="col-6 col-md-2"><div class="stat-card bg-today"><div class="number">{{ today_orders_count }}</div><div class="label">طلبات اليوم</div></div></div>
         <div class="col-6 col-md-2"><div class="stat-card bg-new"><div class="number">{{ new_orders }}</div><div class="label">جديدة</div></div></div>
         <div class="col-6 col-md-2"><div class="stat-card bg-prep"><div class="number">{{ preparing_orders }}</div><div class="label">قيد التجهيز</div></div></div>
         <div class="col-6 col-md-2"><div class="stat-card bg-ready"><div class="number">{{ ready_orders }}</div><div class="label">جاهزة</div></div></div>
@@ -78,6 +78,7 @@
                     <th>الميعاد</th>
                     <th>الإجمالي</th>
                     <th>الحالة</th>
+                    <th>يوم الوجبة </th>
                     <th>تغيير الحالة</th>
                 </tr>
             </thead>
@@ -104,6 +105,7 @@
                             {{ order.status }}
                         </span>
                     </td>
+                    <td>{{ order.pickup_time|date:"Y/m/d" }}</td>
                     <td>
                         <select class="status-select" onchange="updateStatus({{ order.id }}, this.value)">
                             <option value="">-- تغيير --</option>
@@ -124,6 +126,71 @@
             <i class="fas fa-check-circle me-2"></i> لا توجد طلبات نشطة حالياً
         </div>
     {% endif %}
+       <!-- الطلبات المطلوبة اليوم -->
+    <h2 class="section-title mb-4">طلبات اليوم 📅</h2>
+    {% if today_orders %}
+    <div class="table-responsive mb-5">
+        <table class="table table-hover align-middle rounded-3 overflow-hidden shadow-sm">
+            <thead style="background:#9b59b6; color:white;">
+                <tr>
+                    <th>#</th>
+                    <th>الزبون</th>
+                    <th>الوجبة</th>
+                    <th>النفار</th>
+                    <th>الميعاد</th>
+                    <th>الإجمالي</th>
+                    <th>الحالة</th>
+                    <th>يوم الوجبة </th>
+                    <th>تغيير الحالة</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in today_orders %}
+                <tr class="order-row" id="order-row-{{ order.id }}">
+                    <td class="fw-bold text-muted">#{{ order.id }}</td>
+                    <td><i class="fas fa-user text-warning me-1"></i> {{ order.customer.username }}</td>
+                    <td>{{ order.rice_type.name }} + {{ order.protein.name }}</td>
+                    <td>{{ order.number_of_people }} نفار</td>
+                    <td>
+                        <span class="meal-badge {% if order.meal_time == 'غداء' %}meal-lunch{% else %}meal-dinner{% endif %}">
+                            {{ order.meal_time }}
+                        </span>
+                    </td>
+                    <td class="fw-bold text-warning">{{ order.get_total_price_display }}</td>
+                    <td>
+                        <span class="status-badge
+                            {% if order.status == 'جديد' %}status-new
+                            {% elif order.status == 'قيد التجهيز' %}status-preparing
+                            {% elif order.status == 'جاهز' %}status-ready
+                            {% else %}status-completed{% endif %}"
+                            id="status-text-{{ order.id }}">
+                            {{ order.status }}
+                        </span>
+                    </td>
+                    <td>{{ order.pickup_time|date:"Y/m/d" }}</td>
+                    <td>
+                        <select class="status-select" onchange="updateStatus({{ order.id }}, this.value)">
+                            <option value="">-- تغيير --</option>
+                            <option value="جديد">جديد</option>
+                            <option value="قيد التجهيز">قيد التجهيز</option>
+                            <option value="جاهز">جاهز</option>
+                            <option value="مكتمل">مكتمل</option>
+                            <option value="ملغي">ملغي</option>
+                        </select>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="alert alert-info rounded-3 text-center mb-5">
+            <i class="fas fa-info-circle me-2"></i> لا توجد طلبات مطلوبة اليوم
+        </div>
+    {% endif %}
+
+
+
 
     <!-- رابط جميع الطلبات -->
     <div class="text-center">

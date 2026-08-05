@@ -99,14 +99,16 @@
                             {% endif %}
                         </div>
 
-                        <!-- الميعاد -->
-                        <div class="col-md-6">
-                            <label class="form-label"><i class="fas fa-clock text-warning me-1"></i> الميعاد</label>
-                            {{ form.meal_time }}
-                            {% if form.meal_time.errors %}
-                                <div class="text-danger small mt-1">{{ form.meal_time.errors }}</div>
-                            {% endif %}
-                        </div>
+                        <!-- نوع الوجبة  -->
+                       <div class="col-md-6">
+    <label class="form-label fw-bold">
+        <i class="fas fa-utensils text-warning me-1"></i> نوع الوجبة
+    </label>
+    {{ form.meal_time }}
+    {% if form.meal_time.errors %}
+        <div class="text-danger small mt-1">{{ form.meal_time.errors }}</div>
+    {% endif %}
+</div>
 
                         <!-- رقم الجوال -->
                         <div class="col-12">
@@ -114,6 +116,14 @@
                             {{ form.phone }}
                             {% if form.phone.errors %}
                                 <div class="text-danger small mt-1">{{ form.phone.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <!-- وقت الاستلام -->
+                        <div class="col-12">
+                            <label class="form-label"><i class="fas fa-calendar-alt text-warning me-1"></i> يوم الوجبة</label>
+                            {{ form.pickup_time }}
+                            {% if form.pickup_time.errors %}
+                                <div class="text-danger small mt-1">{{ form.pickup_time.errors }}</div>
                             {% endif %}
                         </div>
 

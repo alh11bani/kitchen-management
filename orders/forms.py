@@ -6,14 +6,16 @@ class OrderForm(forms.ModelForm):
     
     class Meta:
         model = Order
-        fields = ['rice_type', 'protein', 'number_of_people', 'meal_time', 'phone', 'notes']
+        fields = ['rice_type', 'protein', 'number_of_people', 'meal_time','pickup_time', 'phone', 'notes', ]
         widgets = {
             'rice_type': forms.Select(attrs={'class': 'form-control'}),
             'protein': forms.Select(attrs={'class': 'form-control'}),
             'number_of_people': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
             'meal_time': forms.Select(attrs={'class': 'form-control'}),
+            'pickup_time': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'date'}),
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '05xxxxxxxx'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'أي ملاحظات إضافية...'}),
+            
         }
     
     def __init__(self, *args, **kwargs):
@@ -31,3 +33,4 @@ class OrderForm(forms.ModelForm):
         self.fields['meal_time'].label = 'الميعاد'
         self.fields['phone'].label = 'رقم الجوال'
         self.fields['notes'].label = 'ملاحظات إضافية'
+        self.fields['pickup_time'].label = 'وقت الاستلام'

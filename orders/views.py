@@ -108,7 +108,8 @@ def kitchen_dashboard(request):
     all_orders = Order.objects.all().order_by('-order_date')
     
     today = timezone.now().date()
-    today_orders = Order.objects.filter(order_date__date=today).count()
+    today_orders_count = Order.objects.filter(pickup_time=today).count()
+    today_orders = Order.objects.filter(pickup_time=today).order_by('-order_date')
     
     context = {
         'active_orders': active_orders,
@@ -120,6 +121,7 @@ def kitchen_dashboard(request):
         'completed_orders': completed_orders,
         'cancelled_orders': cancelled_orders,
         'today_orders': today_orders,
+        'today_orders_count':today_orders_count ,
     }
     return render(request, 'orders/kitchen_dashboard.html', context)
 

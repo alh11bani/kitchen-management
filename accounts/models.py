@@ -31,10 +31,8 @@ class Profile(models.Model):
         null=True, 
         verbose_name="الصورة الشخصية"
     )
-    is_kitchen_owner = models.BooleanField(
-        default=False, 
-        verbose_name="صاحب مطبخ"
-    )
+    
+    
     created_at = models.DateTimeField(
         auto_now_add=True, 
         verbose_name="تاريخ الإنشاء"
