@@ -11,25 +11,35 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
-
+# ==================== الأمان ====================
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-kha67r^9^@r_n7@kum+ay7uhio6l)e-0*2g-fq04zg&t$h2vvy'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-your-default-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False  # ← تم التغيير إلى False
 
-ALLOWED_HOSTS = []
+# السماح بالنطاقات
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '.onrender.com',  # يسمح بأي نطاق على Render
+]
 
+# ==================== قاعدة البيانات ====================
+DATABASES = {
+    'default': dj_database_url.config(
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600
+    )
+}
 
-# Application definition
-
+# ==================== التطبيقات ====================
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,8 +51,10 @@ INSTALLED_APPS = [
     'orders',
 ]
 
+# ==================== Middleware ====================
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # يجب أن يكون بعد SecurityMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -56,7 +68,7 @@ ROOT_URLCONF = 'kitchen_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-         'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -70,21 +82,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'kitchen_project.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-
-# Password validation
-# https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
-
+# ==================== التحقق من كلمة المرور ====================
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -100,30 +98,36 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/6.0/topics/i18n/
-
+# ==================== التدويل ====================
 LANGUAGE_CODE = 'ar'
 TIME_ZONE = 'Asia/Riyadh'
 USE_I18N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
-
+# ==================== الملفات الثابتة والوسائط ====================
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# إعدادات تسجيل الدخول
+# ==================== إعدادات الأمان للإنتاج ====================
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# ==================== إعدادات تسجيل الدخول ====================
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = 'orders:home'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
+# ==================== الإعدادات الافتراضية ====================
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+''' # ==================== إعدادات HSTS ====================
+SECURE_HSTS_SECONDS = 3600  # سنة واحدة (يفضل البدء بـ 3600 ثم زيادتها)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # يشمل جميع النطاقات الفرعية
+SECURE_HSTS_PRELOAD = True  # يطلب من المتصفحات تحميل القائمة مسبقاً '''

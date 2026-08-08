@@ -36,7 +36,7 @@ def edit_profile(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            messages.success(request, 'تم تحديث الملف الشخصي بنجاح!')
+            messages.error(request, 'تم تحديث الملف الشخصي بنجاح!')
             return redirect('accounts:profile')
     else:
         user_form = UserUpdateForm(instance=request.user)

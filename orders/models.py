@@ -125,7 +125,7 @@ class Order(models.Model):
     meal_time = models.CharField(
         max_length=10, 
         choices=MEAL_TIME_CHOICES, 
-        verbose_name="الميعاد"
+        verbose_name="نوع الوجبة"
     )
     phone = models.CharField(
         max_length=15, 
@@ -171,8 +171,7 @@ class Order(models.Model):
         verbose_name="تاريخ الطلب"
     )
     pickup_time = models.DateField(
-        null=True, 
-        blank=True, 
+        
         verbose_name="يوم موعد الوجبة",
         help_text="يوم الوجبة  "
     )
