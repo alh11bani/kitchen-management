@@ -1,18 +1,14 @@
 #!/usr/bin/env bash
-# build.sh - سكريبت البناء لـ Render
-
 set -o errexit
 
-# تثبيت المتطلبات
 pip install -r requirements.txt
-
-# تجميع الملفات الثابتة
 python manage.py collectstatic --no-input
-
-# تنفيذ ترحيلات قاعدة البيانات
 python manage.py migrate
 
-# ✅ إنشاء المدير تلقائياً (سطر واحد فقط!)
-python manage.py createsuperuser --noinput --username $DJANGO_SUPERUSER_USERNAME --email $DJANGO_SUPERUSER_EMAIL
-
-# ملاحظة: كلمة المرور تؤخذ من متغير DJANGO_SUPERUSER_PASSWORD
+# ✅ حذف المدير القديم وإنشاء جديد
+python manage.py shell -c "
+from django.contrib.auth.models import User;
+User.objects.filter(username='$DJANGO_SUPERUSER_USERNAME').delete();
+User.objects.create_superuser('$DJANGO_SUPERUSER_USERNAME', '$DJANGO_SUPERUSER_EMAIL', '$DJANGO_SUPERUSER_PASSWORD')
+"
+echo "✅ تم إعادة إنشاء المدير!"
