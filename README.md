@@ -81,6 +81,9 @@
    * `PYTHON_VERSION`: `3.11.0`
    * `DATABASE_URL`: (اختياري - إذا أردت استخدام قاعدة بيانات PostgreSQL لضمان عدم مسح البيانات عند إعادة التشغيل).
 
+🌍 **المشروع مرفوع ويعمل كنسخة تجريبية على الرابط التالي:**
+[https://kitchen-management-bjx7.onrender.com/](https://kitchen-management-bjx7.onrender.com/)
+
 ---
 
 ## 📸 لقطات الشاشة (Screenshots)
