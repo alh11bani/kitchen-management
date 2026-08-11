@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path('reset-password/', reset_admin_password, name='reset_password')
+     path('reset-password/', reset_admin_password, name='reset_password'),
     path('', include('orders.urls')),      # الصفحة الرئيسية والطلبات
     path('accounts/', include('accounts.urls')),  # المصادقة
 ]
