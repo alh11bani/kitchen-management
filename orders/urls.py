@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.urls import path, include 
 
 app_name = 'orders'
 
@@ -7,7 +8,7 @@ urlpatterns = [
     # الصفحة الرئيسية
     path('', views.home, name='home'),
     
-        path('', include('orders.urls')),      # الصفحة الرئيسية والطلبات
+    #path('', include('orders.urls')),      # الصفحة الرئيسية والطلبات
     
     # عرض قائمة الأرز والإدام
     path('menu/', views.menu, name='menu'),
