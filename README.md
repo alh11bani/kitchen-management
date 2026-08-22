@@ -87,9 +87,8 @@ The system allows customers to browse the menu and place orders online, while pr
 
 The project is deployed and available for testing:
 
-**[🚀 Kitchen Management System — Live Preview](#)**
+**[🚀 Kitchen Management System — Live Preview](https://kitchen-management-bjx7.onrender.com/#)**
 
-> Replace `#` with your actual deployed project URL.
 
 ---
 
@@ -156,88 +155,6 @@ The project will now be available at:
 http://127.0.0.1:8000/
 ```
 
----
-
-## 📸 Screenshots
-
-Add screenshots of the application here to showcase the main features.
-
-### 👤 Customer Interface
-
-*Add customer dashboard screenshot here.*
-
-### 🛒 Order Page
-
-*Add order creation page screenshot here.*
-
-### 👨‍🍳 Kitchen Dashboard
-
-*Add kitchen/admin dashboard screenshot here.*
-
-### 📦 Order Management
-
-*Add order management screenshot here.*
-
-> 💡 You can upload screenshots directly to GitHub by dragging and dropping them into the repository, then reference them using Markdown.
-
-Example:
-
-```markdown
-![Kitchen Dashboard](screenshots/dashboard.png)
-```
-
----
-
-
-```
-
-> Adjust the structure above to match your actual project structure.
-
----
-
-## 🔐 Authentication
-
-The application includes a complete authentication system using Django's built-in authentication features.
-
-Users can:
-
-* Register a new account
-* Log in and log out
-* Manage their profile
-* Upload a profile picture
-* Access features based on their permissions
-
----
-
-## 📊 Order Status Flow
-
-Orders follow a simple workflow:
-
-```text
-🆕 New
-   ↓
-👨‍🍳 Preparing
-   ↓
-✅ Ready
-   ↓
-📦 Completed
-```
-
-Customers can cancel their orders while they are still in the **New** state.
-
----
-
-## 🔮 Future Improvements
-
-Some possible improvements for future versions:
-
-* 🔔 Real-time notifications
-* 📱 Improved mobile experience
-* 📈 Advanced analytics and reports
-* 🐘 PostgreSQL production configuration
-* ☁️ Cloud storage for uploaded images
-* 🔐 Enhanced role and permission management
-* 📧 Email notifications for order updates
 
 ---
 
@@ -249,11 +166,3 @@ Feel free to use, modify, and improve it for your own learning and development.
 
 ---
 
-## 👨‍💻 Author
-
-**Your Name**
-
-* GitHub: `https://github.com/your-username`
-* Email: `your-email@example.com`
-
-> Replace the author information above with your actual details.
